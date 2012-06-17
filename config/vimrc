@@ -1,0 +1,196 @@
+" An example for a vimrc file.
+"
+" Maintainer:	Bram Moolenaar <Bram@vim.org>
+" Last change:	2006 Nov 16
+"
+" To use it, copy it to
+"     for Unix and OS/2:  ~/.vimrc
+"	      for Amiga:  s:.vimrc
+"  for MS-DOS and Win32:  $VIM\_vimrc
+"	    for OpenVMS:  sys$login:.vimrc
+
+" When started as "evim", evim.vim will already have done these settings.
+if v:progname =~? "evim"
+  finish
+endif
+
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+if has("vms")
+  set nobackup		" do not keep a backup file, use versions instead
+else
+  set backup		" keep a backup file
+endif
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set incsearch		" do incremental searching
+
+" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
+" let &guioptions = substitute(&guioptions, "t", "", "g")
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+set mouse=a
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+
+  augroup END
+
+else
+
+  set autoindent		" always set autoindenting on
+
+endif " has("autocmd")
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+	 	\ | wincmd p | diffthis
+
+"============================================================================
+"
+" My customized configration for VIM 7.3
+"
+"============================================================================
+
+set number
+set completeopt=longest,menu
+set cindent shiftwidth=2
+set expandtab
+set tabstop=2
+set fileencodings=gb2312,18030,utf-8
+set termencoding=utf-8
+"set fileformats=unix
+set encoding=prc
+set mouse=i
+
+" set expandtab
+set autoindent
+set guifont=Courier\ New\ 12
+" set nowrap
+set guioptions+=b
+set backupext=.bak
+set backupdir=/home/hmin/.vim_backup
+colorscheme tango-desert
+syntax enable
+syntax on
+
+autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \ exe "normal g`\"" |
+      \ endif
+
+let g:AutoComplPop_BehaviorKeywordLength=5
+let g:AutoComplPop_NotEnableAtStartup=1
+
+" Quickfix
+set cscopequickfix=s-,c-,d-,g-,i-,t-,e-,f-
+nmap <F5> :cw<cr>
+nmap <F6> :cn<cr>
+nmap <F7> :cp<cr>
+nmap <F8> :ccl<cr>
+
+" BufExplorer 
+let g:bufExplorerChgWin=1
+let g:bufExplorerDefaultHelp=0
+let g:bufExplorerDetailedHelp=0
+let g:bufExplorerShowRelativePath=1
+let g:bufExplorerSortBy='namet'
+nmap be :BufExplorerVerticalSplit<cr>
+nmap bh :BufExplorerHorizontalSplit<cr> 
+
+" Supertab
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
+let g:SuperTabRetainCompletionType=2
+
+filetype plugin on
+filetype indent on
+
+autocmd FileType c set omnifunc=ccomplete#Complete
+autocmd FileType h set omnifunc=ccomplete#Complete
+autocmd FileType cpp set omnifunc=ccomplete#Complete
+autocmd FileType cc set omnifunc=ccomplete#Complete
+
+" manpage viewer
+let g:manpageview_winopen = "vsplit"
+
+" ctags and omnicppcomplete
+set nocp
+map <C-F9> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+
+" EnhancementCommentify
+vmap <F3> <Esc><Esc>:call EnhancedCommentify('yes','comment',line("'<"),line("'>"))<CR>
+vmap <F4> <Esc><Esc>:call EnhancedCommentify('yes','decomment',line("'<"),line("'>"))<CR>
+
+" Set the layout for Winmanager and Tlist toggle
+let g:winManagerWindowLayout="FileExplorer|TagList"
+nmap wm :WMToggle<cr>
+
+" Set key shortcut for .c/.h file switching
+nnoremap <silent> <F12> :A<CR>
+
+" Set key shortcut F3 for grep utility
+nnoremap <silent> <F3> :Grep<CR>
+
+" Cscope settting
+if has("cscope")
+  set csprg=/usr/bin/cscope
+  set csto=0
+  set cst
+  set nocsverb
+  " add any database in current directory
+  if filereadable("cscope.out")
+    cs add cscope.out
+    " else add database pointed to by environment
+  elseif $CSCOPE_DB != ""
+    cs add $CSCOPE_DB
+  endif
+  set csverb
+endif
+
+nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-_>i :cs find i <C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>

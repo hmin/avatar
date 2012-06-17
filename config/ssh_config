@@ -1,0 +1,26 @@
+Host powerbuilder.sh.intel.com
+	IdentityFile /home/hmin/.ssh/hmin_rsa
+
+Host powerbuilder
+	IdentityFile /home/hmin/.ssh/hmin_rsa
+
+Host *.meego.com
+	IdentityFile /home/hmin/.ssh/hmin_rsa
+	ProxyCommand /usr/bin/connect -S proxy.jf.intel.com:1080 %h %p
+
+Host gitorious.org
+	IdentityFile /home/hmin/.ssh/hmin_rsa
+	ProxyCommand /usr/bin/connect -S proxy.jf.intel.com:1080 %h %p
+
+Host github.com
+  User git
+  Hostname github.com
+  IdentityFile /home/hmin/.ssh/hmin_rsa
+  ProxyCommand /usr/bin/connect -S proxy.jf.intel.com:1080 %h %p
+
+Host saobs.jf.intel.com 
+  User hongbomin
+  Hostname saobs.jf.intel.com
+  IdentityFile /home/hmin/.ssh/hmin_rsa
+#  ProxyCommand /usr/bin/connect -S proxy.jf.intel.com:1080 %h %p
+
