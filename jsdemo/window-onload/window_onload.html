@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Run multiple functions on window.onload </title>
+<script>
+function registerNewFunc(entryFunc, newFunc) {
+  return function() {
+    if (entryFunc) entryFunc();
+    if (newFunc) newFunc();
+  }
+}
+</script>
+<script src="foo.js"></script>
+<script src="bar.js"></script>
+<script>
+  function zar() {
+    document.getElementById("content").innerHTML += "call zar in window_onload.html<br>"
+  }
+  window.onload = registerNewFunc(window.onload, zar);  
+</script>
+</head>
+<body>
+  <div id='content'></div>
+</body>
+</html>
+  
