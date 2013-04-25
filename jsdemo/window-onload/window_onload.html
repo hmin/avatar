@@ -9,6 +9,12 @@ function registerNewFunc(entryFunc, newFunc) {
     if (newFunc) newFunc();
   }
 }
+
+var callbacks = [];
+
+function registerNewFuncIntoArray(newFunc) {
+  callbacks.push(newFunc);
+}
 </script>
 <script src="foo.js"></script>
 <script src="bar.js"></script>
@@ -16,7 +22,12 @@ function registerNewFunc(entryFunc, newFunc) {
   function zar() {
     document.getElementById("content").innerHTML += "call zar in window_onload.html<br>"
   }
-  window.onload = registerNewFunc(window.onload, zar);  
+  registerNewFuncIntoArray(zar);
+  window.onload = function() {
+    for (var i = 0; i < callbacks.length; i++)
+      callbacks[i]();
+  }
+//  window.onload = registerNewFunc(window.onload, zar);  
 </script>
 </head>
 <body>
