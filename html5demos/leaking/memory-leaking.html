@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Heap snapshot to uncover potential memory leaking</title>
+<style>
+body {
+  font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+}
+</style>
+<script>
+function MyItem(x)
+{
+  this.x = x;
+}
+
+MyItem.prototype = {
+  clone: function()
+  {
+    return new MyItem(this.x);
+  }
+};
+
+function leakMemory()
+{
+  for (var i = 0; i < data.length - 1; ++i) {
+    line = new Array(data[i].length);
+    for (var j = 0, l = data[i].length; j < l; ++j)
+      line[j] = data[i][j].clone();
+    for (var j = 0, l = data[i].length; j < l; ++j) {
+      data[i][j] = data[i + 1][j].clone();
+      data[i + 1][j] = line[j].clone();
+    }
+  }
+}
+
+var data = new Array(10);
+for (var i = 0; i < data.length; ++i) {
+  data[i] = new Array(1000);
+  for (var j = 0, l = data[i].length; j < l; ++j)
+    data[i][j] = new MyItem(i * l + j);
+}
+
+</script>
+</head>
+<body>
+  <div id="content">
+  	<div>
+  	  <h2>Use Comparison view to identify potential memory leaks</h2>
+  	  <p> Steps: </p>
+  	  <ul styles="list-style:disc">
+  	  	<li> Open Developer Tools > Profiles > Choose 'Take Heap Snapshot'; </li>
+  	  	<li> Take the heap snapshot; </li>
+  	  	<li> Click <input type="button" value="Leak memory" onclick="leakMemory();"></input>;</li>
+  	  	<li> Take another heap snapshot; </li>
+  	  	<li> Open <strong>Comparison</strong> view to identify the potential memory leaking. </li>
+  	  </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Heap snapshot to uncover DOM leaking issues </title>
+<style>
+body {
+  font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+}
+</style>
+<script>
+function leakDOM()
+{
+  var p = document.getElementById("content");
+  detached = document.createElement("div");
+  p.appendChild(detached);
+  p.removeChild(detached);
+  fill();
+}
+
+function fill()
+{
+  for (var i = 0; i < 25; ++i) {
+    var div = document.createElement('div');
+    div.data = new Array(10000);
+    for (var j = 0, l = div.data.length; j < l; ++j)
+      div.data[j] = j.toString();
+    detached.appendChild(div);
+  }
+}
+
+</script>
+</head>
+<body>
+  <div id="content">
+  	<div>
+  	  <h2>Use comparison view to identify potential memory leaks</h2>
+  	  <p> Steps: </p>
+  	  <ul styles="list-style:disc">
+  	  	<li> Click <input type="button" value="Leak DOM" onclick="leakDOM();"></input>;</li>
+        <li> Open Developer Tools > Profiles > Choose 'Take Heap Snapshot';
+   	  	<li> Take the heap snapshot; </li>
+  	  	<li> Open the <strong>Summary</strong> view; </li>
+  	  	<li> Find 'Detached DOM tree' entry, and expand it; </li>
+  	  	<li> Alternatively, open the <strong>Containment</strong> view. </li>
+  	  </ul>
+    </div>
+</body>
+</html>
