@@ -1,0 +1,14 @@
+{
+ "name": "Fullscreen Sample",
+ "version": "0.1",
+ "permissions": ["experimental"],
+ "minimum_chrome_version": "23",
+ "manifest_version": 2,
+ "description": "Show HTML5 fullscreen API usage",
+ "permissions": ["experimental", "fullscreen"],
+ "app": {
+   "background": {
+     "scripts": ["background.js"]
+   }
+ }
+}
