@@ -1,0 +1,59 @@
+
+<div style="width:100px;height:100px;border:1px solid black;color:red;position:absolute;left:100px;top:100px;" id="card" draggable="true"></div>
+</div>
+
+<table style= "position:absolute;left:500px;top:100px;">
+  <caption>Dnd Mouse Position</caption>
+  <tbody>
+  	<tr><td>DragStart</td></tr>
+    <tr>
+      <td>x</td>
+      <td><input type="text" id="ds1"></td>
+      <td style="padding-left:30px">y</td>
+      <td style="padding-left:30px"><input type="text" id="ds2"></td>
+    </tr>
+
+    <tr><td>DragEnd</td></tr>
+    <tr>
+      <td>x</td>
+      <td><input type="text" id="de1"></td>
+      <td style="padding-left:30px">y</td>
+      <td style="padding-left:30px"><input type="text" id="de2"></td>
+    </tr>
+  
+  	<tr>
+      <td>Drag</td>
+      <textarea id="d1" style="position:absolute;left:500px;top:250px;width:300px;height:600px"></textarea>
+    </tr>
+    
+  </tbody>
+</table>
+<table>
+
+<script>
+	var dragElem = document.getElementById("card");
+	dragElem.addEventListener("dragstart",onDragStart);
+	dragElem.addEventListener("drag",onDrag);
+	dragElem.addEventListener("dragend",onDragEnd);
+	var strX = "x:  ",
+		strY = "   y:  ",
+		common = "\n";
+	var dragPosition = document.getElementById("d1");
+
+	function onDragStart(e){
+		document.getElementById("ds1").value = e.x;
+		document.getElementById("ds2").value = e.y;
+		out = "";
+		dragPosition.value = "";
+	}
+
+	function onDrag(e){
+		if(e.x != 0 && e.y != 0)
+			dragPosition.value += strX + e.x + strY + e.y + common;
+	}
+
+	function onDragEnd(e){
+		document.getElementById("de1").value = e.x;
+		document.getElementById("de2").value = e.y;
+	}
+</script>
